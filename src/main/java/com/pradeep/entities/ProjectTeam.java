@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.pradeep.enums.ProjectStatus;
+import com.pradeep.enums.ProjectUserStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,5 +32,6 @@ public class ProjectTeam {
 	private Long userId;
 	private String role;
 	private String authorities;
-	
+	private Long inviterUserId;
+	private ProjectUserStatus projectUserStatus;
 }
