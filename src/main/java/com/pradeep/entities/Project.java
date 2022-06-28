@@ -36,14 +36,14 @@ public class Project {
 	
 	@OneToOne
 	@JoinColumn(name="projectTypeId")
-    private ProjectType projectType;   
+    	private ProjectType projectType;   
 	
 	@OneToOne
 	@JoinColumn(name="projectSubTypeId",nullable = true)
-    private ProjectSubType projectSubType;
+    	private ProjectSubType projectSubType;
 	
 	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
-    private ProjectAddress projectAddress;      
+   	private ProjectAddress projectAddress;      
 	
 	@ElementCollection
 	@CollectionTable(name = "project_stake_holders", joinColumns = @JoinColumn(name = "projectId"))
