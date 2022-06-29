@@ -64,7 +64,6 @@ public class OtherCompanyServiceImpl implements IOtherCompanyService {
 			throw new ResourceExistsException("Company exists");
 		}
 	}
-	
 
 	private void verifyByCompanyNameAndCompanyId(Long otherCompanyId, String companyName) throws ResourceExistsException, ResourceNotFoundException {
 		Optional<OtherCompanyInfo> optionalOtherCompanyInfo = otherCompanyRepository.findByCompanyName(companyName);
