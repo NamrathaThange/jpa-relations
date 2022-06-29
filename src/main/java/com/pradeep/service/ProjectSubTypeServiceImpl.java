@@ -38,7 +38,7 @@ public class ProjectSubTypeServiceImpl implements IProjectSubTypeService {
 	public ProjectSubType updateProjectSubType(Long projectSubTypeId, ProjectSubType updatedProjectSubType) throws ResourceExistsException, ResourceNotFoundException {
 		verifyByProjectSubTypeAndProjectSubTypeId(projectSubTypeId,updatedProjectSubType.getProjectSubTypeName());
 		ProjectSubType existingProjectSubType = projectSubTypeRepository.findById(projectSubTypeId).orElseThrow(() -> new ResourceNotFoundException("Project Sub Type not found :: " + projectSubTypeId));
-		String[] ignoreFields = { "projectSubTypeId"};
+		String[] ignoreFields = { "projectSubTypeId","projectType"};
 		BeanUtils.copyProperties(updatedProjectSubType, existingProjectSubType, ignoreFields);
 		ProjectSubType projectSubType=projectSubTypeRepository.save(existingProjectSubType);
 		return projectSubType;

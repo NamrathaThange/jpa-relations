@@ -1,12 +1,12 @@
 package com.pradeep.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -22,8 +22,9 @@ public class ProjectSubType {
 	private Long projectSubTypeId;
 	private String projectSubTypeName;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_type_id")
 	@JsonBackReference
+
 	private ProjectType projectType;
 }

@@ -28,11 +28,7 @@ public class ProjectSubTypeController {
 	@Autowired
 	private IProjectSubTypeService projectSubTypeService;
 	
-	@GetMapping("{projectTypeId}")
-	public ResponseEntity<List<ProjectSubType>> listProjectTypes(@PathVariable("projectTypeId") Long projectTypeId) {
-		List<ProjectSubType> listOfOtherCompanies=projectSubTypeService.listProjectSubTypes(projectTypeId);
-		return new ResponseEntity<List<ProjectSubType>>(listOfOtherCompanies,HttpStatus.OK);
-	}
+	
 	
 	@GetMapping("{projectSubTypeId}")
 	public ResponseEntity<ProjectSubType> getProjectSubTypeById(@PathVariable("projectSubTypeId") Long projectSubTypeId) throws ResourceNotFoundException  {

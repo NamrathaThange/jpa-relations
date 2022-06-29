@@ -19,6 +19,7 @@ import com.pradeep.entities.ProjectSubType;
 import com.pradeep.entities.ProjectType;
 import com.pradeep.exception.ResourceExistsException;
 import com.pradeep.exception.ResourceNotFoundException;
+import com.pradeep.service.IProjectSubTypeService;
 import com.pradeep.service.IProjectTypeService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +32,9 @@ public class ProjectTypeController {
 	
 	@Autowired
 	private IProjectTypeService projectTypeService;
+	
+	@Autowired
+	private IProjectSubTypeService projectSubTypeService;
 	
 	@PostMapping
 	@Operation(summary = "Add Project Type", description = "Add Project Type", tags = { "topic" })
@@ -64,6 +68,12 @@ public class ProjectTypeController {
 	public ResponseEntity<ProjectType> updateProjectType(@RequestBody ProjectType updatedProjectType,@PathVariable("projectTypeId") Long projectTypeId) throws ResourceNotFoundException, ResourceExistsException {
 		ProjectType savedProjectType=projectTypeService.updateProjectType(projectTypeId,updatedProjectType);
 		return new ResponseEntity<ProjectType>(savedProjectType, HttpStatus.OK);
+	}
+	
+	@GetMapping("{projectTypeId}/projectsubtypes")
+	public ResponseEntity<List<ProjectSubType>> listProjectTypes(@PathVariable("projectTypeId") Long projectTypeId) {
+		List<ProjectSubType> listOfOtherCompanies=projectSubTypeService.listProjectSubTypes(projectTypeId);
+		return new ResponseEntity<List<ProjectSubType>>(listOfOtherCompanies,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{projectTypeId}")
