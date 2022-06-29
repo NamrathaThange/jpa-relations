@@ -3,7 +3,6 @@ package com.pradeep.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Retry.Topic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pradeep.dtos.OperationResponseDto;
 import com.pradeep.dtos.ResponseDto;
 import com.pradeep.entities.OtherCompanyInfo;
+import com.pradeep.exception.ResourceExistsException;
+import com.pradeep.exception.ResourceNotFoundException;
 import com.pradeep.service.IOtherCompanyService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,29 +35,32 @@ public class OtherCompanyController {
 	@PostMapping
 	@Operation(summary = "Add Topic", description = "Adds topic to the FirstApp", tags = { "topic" })
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "successful operation") })
-	public ResponseEntity<OtherCompanyInfo> addTopic(@RequestBody OtherCompanyInfo otherCompanyInfo)  {
+	public ResponseEntity<OtherCompanyInfo> addTopic(@RequestBody OtherCompanyInfo otherCompanyInfo) throws ResourceExistsException  {
 		OtherCompanyInfo savedOtherCompanyInfo=otherCompanyService.createOtherCompanyInfo(otherCompanyInfo);
 		return new ResponseEntity<OtherCompanyInfo>(savedOtherCompanyInfo, HttpStatus.CREATED);
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<OtherCompanyInfo>> getOtherCompanies() {
-		return new ResponseEntity<List<OtherCompanyInfo>>(otherCompanyService.getOtherCompanies(), HttpStatus.OK);
+		List<OtherCompanyInfo> listOfOtherCompanies=otherCompanyService.getOtherCompanies();
+		return new ResponseEntity<List<OtherCompanyInfo>>(listOfOtherCompanies,HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<OtherCompanyInfo> getOtherCompanyById(@PathVariable("id") Long id)  {
-		return new ResponseEntity<OtherCompanyInfo>(otherCompanyService.getOtherCompanyById(id), HttpStatus.OK);
+	public ResponseEntity<OtherCompanyInfo> getOtherCompanyById(@PathVariable("id") Long id) throws ResourceNotFoundException  {
+		OtherCompanyInfo otherCompanyInfo=otherCompanyService.getOtherCompanyById(id);
+		return new ResponseEntity<OtherCompanyInfo>(otherCompanyInfo,HttpStatus.OK);
 	}
 	
 	@PutMapping("{otherCompanyId}")
-	public ResponseEntity<OtherCompanyInfo> updateOtherCompany(@RequestBody OtherCompanyInfo otherCompanyInfo,@PathVariable("otherCompanyId") Long otherCompanyId) {
-		return new ResponseEntity<OtherCompanyInfo>(otherCompanyService.updateOtherCompany(otherCompanyId,otherCompanyInfo), HttpStatus.OK);
+	public ResponseEntity<OtherCompanyInfo> updateOtherCompany(@RequestBody OtherCompanyInfo otherCompanyInfo,@PathVariable("otherCompanyId") Long otherCompanyId) throws ResourceNotFoundException, ResourceExistsException {
+		OtherCompanyInfo updatedOtherCompanyInfo=otherCompanyService.updateOtherCompany(otherCompanyId,otherCompanyInfo);
+		return new ResponseEntity<OtherCompanyInfo>(updatedOtherCompanyInfo, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{otherCompanyId}")
-	public ResponseEntity<ResponseDto> deleteOtherCompany(@PathVariable("otherCompanyId") Long otherCompanyId)  {
-		ResponseDto responseDto=otherCompanyService.deleteOtherCompany(otherCompanyId);
-		return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+	public ResponseEntity<OperationResponseDto> deleteOtherCompany(@PathVariable("otherCompanyId") Long otherCompanyId) throws ResourceNotFoundException  {
+		OperationResponseDto operationResponseDto=otherCompanyService.deleteOtherCompany(otherCompanyId);
+		return new ResponseEntity<OperationResponseDto>(operationResponseDto,HttpStatus.OK);
 	}
 }
