@@ -74,8 +74,6 @@ public class OtherCompanyServiceImpl implements IOtherCompanyService {
 				throw new ResourceExistsException("Company exists");
 			}
 		}
-		
-		
 	}
 
 }
