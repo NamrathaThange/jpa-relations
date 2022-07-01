@@ -13,10 +13,10 @@ import com.pradeep.entities.Project;
 @Repository
 public interface IProjectRepository extends JpaRepository<Project, Long>{
 
-	Optional<Project> findByCompanyIdAndJobNumber(String jobNumber);
+	Optional<Project> findByCompanyIdAndJobNumber(Long companyId , String jobNumber);
 
 	@Query("SELECT p FROM Project p WHERE p.jobNumber=:jobNumber AND p.companyId=:companyId AND NOT p.projectId=:projectId")
-	Optional<Project> findByCompanyIdAndProjectIdAndJobNumber(@Param("companyId")Long companyId, @Param("projectId") Long projectId, @Param("jobNumber")String jobNumber);
+	Optional<Project> findByCompanyIdAndProjectIdAndJobNumber(@Param("companyId")Long companyId, @Param("projectId") Long projectId, @Param("jobNumber") String jobNumber);
 
 	List<Project> findByCompanyId(Long CompanyId);
 	

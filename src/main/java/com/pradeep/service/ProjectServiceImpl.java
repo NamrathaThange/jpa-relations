@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.pradeep.dtos.OperationResponseDto;
 import com.pradeep.entities.Project;
+import com.pradeep.entities.ProjectUser;
+import com.pradeep.enums.ProjectUserStatus;
 import com.pradeep.exception.ResourceExistsException;
 import com.pradeep.exception.ResourceNotFoundException;
 import com.pradeep.repository.IProjectRepository;
+import com.pradeep.repository.IProjectTeamRepository;
 
 @Service
 public class ProjectServiceImpl implements IProjectService {
@@ -19,13 +22,17 @@ public class ProjectServiceImpl implements IProjectService {
 	@Autowired
 	private IProjectRepository projectRepository;
 	
+	@Autowired
+	private IProjectTeamRepository projectTeamRepository;
+	
 	@Override
 	public Project createProject(Project project) throws ResourceExistsException {
-		findByJobNumber(project.getCompanyId(),project.getJobNumber());
+		findByCompanyIdAndJobNumber(project.getCompanyId(),project.getJobNumber());
 		Project savedProject=projectRepository.save(project);
+		createProjectUser(savedProject);
 		return savedProject;
 	}
-
+	
 	@Override
 	public List<Project> getProjectsByCompanyId(Long companyId) {
 		List<Project> projectList=projectRepository.findByCompanyId(companyId);
@@ -41,9 +48,9 @@ public class ProjectServiceImpl implements IProjectService {
 	@Override
 	public Project updateProject(Long projectId, Project updatedProjectInfo) throws ResourceExistsException, ResourceNotFoundException {
 		Project existingProject = projectRepository.findById(projectId).orElseThrow(() -> new ResourceNotFoundException("Project not found :: " + projectId));
-		verifyByJobNumberAndProjectId(updatedProjectInfo.getCompanyId(),projectId,updatedProjectInfo.getJobNumber());
-		String[] ignoreFields = { "projectAddressId"};
-		BeanUtils.copyProperties(updatedProjectInfo.getProjectAddress(), existingProject.getProjectAddress(),ignoreFields);
+		findByCompanyIdAndProjectIdAndJobNumber(updatedProjectInfo.getCompanyId(),projectId,updatedProjectInfo.getJobNumber());
+		String[] ignoreProjectFields = { "projectId"};
+		BeanUtils.copyProperties(updatedProjectInfo, existingProject,ignoreProjectFields);
 		final Project dbUpdatedProject=projectRepository.save(existingProject);
 		return dbUpdatedProject;
 	}
@@ -55,18 +62,29 @@ public class ProjectServiceImpl implements IProjectService {
 		return new OperationResponseDto(true,"Deleted successfully");
 	}
 	
-	private void findByJobNumber(Long companyId,String jobNumber) throws ResourceExistsException {
-		Optional<Project> optionalProject=projectRepository.findByCompanyIdAndJobNumber(jobNumber);
+	private void findByCompanyIdAndJobNumber(Long companyId,String jobNumber) throws ResourceExistsException {
+		Optional<Project> optionalProject=projectRepository.findByCompanyIdAndJobNumber(companyId,jobNumber);
 		if(optionalProject.isPresent()) {
 			throw new ResourceExistsException("Project exists");
 		}
 	}
 
-	private void verifyByJobNumberAndProjectId(Long companyId,Long projectId, String jobNumber) throws ResourceExistsException, ResourceNotFoundException {
+	private void findByCompanyIdAndProjectIdAndJobNumber(Long companyId,Long projectId, String jobNumber) throws ResourceExistsException, ResourceNotFoundException {
 		Optional<Project> optionalProject= projectRepository.findByCompanyIdAndProjectIdAndJobNumber(companyId,projectId,jobNumber);
 		if(optionalProject.isPresent()) {
 			throw new ResourceExistsException("Project exists");
 		}
+	}
+	
+	private void createProjectUser(Project savedProject) {
+		ProjectUser projectUser=new ProjectUser();
+		projectUser.setProjectId(savedProject.getProjectId());
+		projectUser.setCompanyId(savedProject.getCompanyId());
+		projectUser.setUserId(savedProject.getCreatedBy());
+		projectUser.setRole("ProjectAdmin");
+		projectUser.setAuthorities("create:read:update:delete");
+		projectUser.setProjectUserStatus(ProjectUserStatus.CREATED);
+		projectTeamRepository.save(projectUser);
 	}
 
 }

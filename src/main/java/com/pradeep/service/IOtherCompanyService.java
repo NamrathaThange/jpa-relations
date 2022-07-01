@@ -13,10 +13,12 @@ public interface IOtherCompanyService {
 
 	List<OtherCompanyInfo> getOtherCompanies();
 
-	OtherCompanyInfo getOtherCompanyById(Long id) throws ResourceNotFoundException;
+	OtherCompanyInfo getOtherCompanyById(Long otherCompanyId) throws ResourceNotFoundException;
 
 	OtherCompanyInfo updateOtherCompany(Long otherCompanyId, OtherCompanyInfo otherCompanyInfo) throws ResourceNotFoundException, ResourceExistsException;
 
 	OperationResponseDto deleteOtherCompany(Long otherCompanyId) throws ResourceNotFoundException;
+
+	List<OtherCompanyInfo> addOtherCompanyList(List<OtherCompanyInfo> list);
 
 }

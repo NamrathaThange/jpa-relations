@@ -30,14 +30,19 @@ public class OtherCompanyServiceImpl implements IOtherCompanyService {
 	}
 
 	@Override
+	public List<OtherCompanyInfo> addOtherCompanyList(List<OtherCompanyInfo> list) {
+		return otherCompanyRepository.saveAll(list);
+	}
+	
+	@Override
 	public List<OtherCompanyInfo> getOtherCompanies() {
 		List<OtherCompanyInfo> listOfOtherCompanies=otherCompanyRepository.findAll();
 		return listOfOtherCompanies;
 	}
 
 	@Override
-	public OtherCompanyInfo getOtherCompanyById(Long id) throws ResourceNotFoundException {
-		OtherCompanyInfo company = otherCompanyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company not found :: " + id));
+	public OtherCompanyInfo getOtherCompanyById(Long otherCompanyId) throws ResourceNotFoundException {
+		OtherCompanyInfo company = otherCompanyRepository.findById(otherCompanyId).orElseThrow(() -> new ResourceNotFoundException("Company not found :: " + otherCompanyId));
 		return company;
 	}
 
@@ -74,5 +79,4 @@ public class OtherCompanyServiceImpl implements IOtherCompanyService {
 			}
 		}
 	}
-
 }

@@ -25,9 +25,11 @@ import com.pradeep.service.IProjectTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@RequestMapping("/api/v1/projecttype")
+@RequestMapping("/api/v1/projecttypes")
 @RestController
+@Tag(name = "Project Type", description = "The Project type Api's")
 public class ProjectTypeController {
 	
 	@Autowired

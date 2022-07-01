@@ -1,5 +1,6 @@
 package com.pradeep.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Project {
+public class Project extends BaseEntity implements Serializable{
+	private static final long serialVersionUID = 1L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long projectId;
@@ -43,6 +45,7 @@ public class Project {
     private ProjectSubType projectSubType;
 	
 	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+	@JoinColumn(name="projectAddressId")
    	private ProjectAddress projectAddress;      
 	
 	@ElementCollection

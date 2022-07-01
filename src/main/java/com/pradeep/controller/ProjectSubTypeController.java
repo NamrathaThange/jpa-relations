@@ -21,8 +21,11 @@ import com.pradeep.exception.ResourceNotFoundException;
 import com.pradeep.service.IProjectSubTypeService;
 import com.pradeep.service.IProjectTypeService;
 
-@RequestMapping("/api/v1/projectsubtype")
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@RequestMapping("/api/v1/projectsubtypes")
 @RestController
+@Tag(name = "Project Sub Type", description = "The Project sub type Api's")
 public class ProjectSubTypeController {
 
 	@Autowired
